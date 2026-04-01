@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1000421017792",
+    "project_id": "analytics-practice-9944d",
+    "storage_bucket": "analytics-practice-9944d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000421017792:android:6bc771791497416c8f4525",
+        "android_client_info": {
+          "package_name": "com.example.riverpod_practice"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDzf1-xHwkQj56a9ShQZ0BOUzw4pDPLTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
