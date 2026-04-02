@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:injectable/injectable.dart';
 import 'package:riverpod_practice/injection.dart';
 import 'package:riverpod_practice/provider/auth_state.dart';
 import 'package:riverpod_practice/repository/auth_respository.dart';
