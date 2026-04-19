@@ -1,25 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:injectable/injectable.dart';
 import 'package:riverpod_practice/injection.dart';
-import 'package:riverpod_practice/provider/auth_state.dart';
 import 'package:riverpod_practice/repository/auth_respository.dart';
 
-class AuthStateNotifer extends StateNotifier<AuthState> {
-  final AuthRepository authRepository;
-  AuthStateNotifer(this.authRepository) : super(AuthInitial());
+@injectable
+class AuthStateNotifer extends AsyncNotifier<void> {
+  late AuthRepository authRepository;
+  AuthStateNotifer() : super();
 
   void login({required String userName, required String password}) async {
     // Implement login logic here
-    state = AuthLoading();
+    state = AsyncLoading();
     // Simulate a login process
     final result =
         await authRepository.login(userName: userName, password: password);
     result.fold(
-      (l) => state = AuthFailure(l.message.toString()),
-      (r) => state = AuthSuccess(),
+      (l) => state = AsyncValue.error(l.message.toString(), StackTrace.current),
+      (r) => state = AsyncValue.data(r),
     );
+  }
+
+  // This method is called when the notifier is first created. It's a good place to initialize any dependencies.
+  Future<void> build() async {
+    authRepository = getIt<AuthRepository>();
   }
 }
 
-final authStateProvider = StateNotifierProvider<AuthStateNotifer, AuthState>(
-  (ref) => AuthStateNotifer(getIt<AuthRepository>()),
-);
+final authStateProvider =   AsyncNotifierProvider<AuthStateNotifer, void>(AuthStateNotifer.new);

@@ -19,22 +19,14 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     super.initState();
 
     // Listening to auth state changes to show appropriate SnackBar messages.
-    ref.listen<AuthState>(authStateProvider, (previous, next) {
+    ref.listen (authStateProvider, (previous, next) {
       final messenger = ScaffoldMessenger.of(context);
-
-      if (next is AuthSuccess) {
-        messenger.hideCurrentSnackBar();
-        messenger.showSnackBar(
-          const SnackBar(content: Text("Login Successful")),
-        );
+      if(next is AsyncError) {
+        messenger.showSnackBar(SnackBar(content: Text("Login Failed: ${next.error}")));
+      } else if(next is AsyncData) {
+        messenger.showSnackBar(const SnackBar(content: Text("Login Successful")));
       }
-
-      if (next is AuthFailure) {
-        messenger.hideCurrentSnackBar();
-        messenger.showSnackBar(
-          SnackBar(content: Text(next.errorMessage)),
-        );
-      }
+      
     });
   }
 
@@ -58,7 +50,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: authState is AuthLoading
+                onPressed: authState is AsyncLoading
                     ? null
                     : () {
                         ref.read(authStateProvider.notifier).login(
@@ -66,7 +58,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                               password: passwordController.text,
                             );
                       },
-                child: authState is AuthLoading
+                child: authState is AsyncLoading
                     ? const SizedBox(
                         height: 20,
                         width: 20,
