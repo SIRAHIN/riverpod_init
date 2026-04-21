@@ -17,24 +17,23 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   @override
   void initState() {
     super.initState();
-
-    // Listening to auth state changes to show appropriate SnackBar messages.
-    ref.listen (authStateProvider, (previous, next) {
-      final messenger = ScaffoldMessenger.of(context);
-      if(next is AsyncError) {
-        messenger.showSnackBar(SnackBar(content: Text("Login Failed: ${next.error}")));
-      } else if(next is AsyncData) {
-        messenger.showSnackBar(const SnackBar(content: Text("Login Successful")));
-      }
-      
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-
     // Watching the auth state to update the UI based on loading, success, or failure states.
     final authState = ref.watch(authStateProvider);
+
+    // Listening to auth state changes to show appropriate SnackBar messages.
+    ref.listen(authStateProvider, (previous, next) {
+      final messenger = ScaffoldMessenger.of(context);
+      if (next is AsyncError) {
+        messenger.showSnackBar(SnackBar(content: Text("${next.error}")));
+      } else if (next is AsyncData) {
+        messenger
+            .showSnackBar(const SnackBar(content: Text("Login Successful")));
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(title: const Text('Login')),

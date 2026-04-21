@@ -2,8 +2,17 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:injectable/injectable.dart';
-import 'package:riverpod_practice/injection.dart';
+import 'package:riverpod_practice/api_service/auth_api_service.dart';
 import 'package:riverpod_practice/repository/auth_respository.dart';
+
+final authRepositoryProvider = Provider<IAuthRepository>((ref) {
+  final apiService = ref.read(authApiServiceProvider);
+  return IAuthRepository(apiService);
+});
+
+final authApiServiceProvider = Provider<IAuthApiService>((ref) {
+  return IAuthApiService();
+});
 
 @injectable
 class AuthStateNotifer extends AsyncNotifier<void> {
@@ -23,9 +32,11 @@ class AuthStateNotifer extends AsyncNotifier<void> {
   }
 
   // This method is called when the notifier is first created. It's a good place to initialize any dependencies.
-  Future<void> build() async {
-    authRepository = getIt<AuthRepository>();
+  @override
+  void build() {
+    authRepository = ref.read(authRepositoryProvider);
   }
 }
 
-final authStateProvider =   AsyncNotifierProvider<AuthStateNotifer, void>(AuthStateNotifer.new);
+final authStateProvider =
+    AsyncNotifierProvider<AuthStateNotifer, void>(AuthStateNotifer.new);
