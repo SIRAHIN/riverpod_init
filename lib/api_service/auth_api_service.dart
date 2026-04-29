@@ -4,6 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 import 'package:riverpod_practice/api_service/i_auth_api_service.dart';
+import 'package:riverpod_practice/injection.dart';
+import 'package:riverpod_practice/local_service/auth_local_service.dart';
 import 'package:riverpod_practice/models/error_response.dart';
 import 'package:riverpod_practice/models/login_response.dart';
 
@@ -122,8 +124,10 @@ class IAuthApiService extends AuthApiService {
         'password': password,
       });
 
-      Response response =
-          await client.post('/auth/login',data: loginInfo,);
+      Response response = await client.post(
+        '/auth/login',
+        data: loginInfo,
+      );
       var result = LoginResponse.fromJson(response.data);
       return right(result);
     } catch (e) {

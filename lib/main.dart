@@ -2,10 +2,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:riverpod_practice/dummy_future_data.dart';
 import 'package:riverpod_practice/firebase_analytics_service.dart';
 import 'package:riverpod_practice/firebase_options.dart';
 import 'package:riverpod_practice/injection.dart';
+import 'package:riverpod_practice/models/auth_credential.dart';
 import 'package:riverpod_practice/registration_screen.dart';
 
 void main() async {
@@ -15,6 +17,10 @@ void main() async {
   );
 
   configureDependencies();
+
+  await Hive.initFlutter();
+
+  Hive.registerAdapter(AuthCredentialAdapter());
 
   runApp(ProviderScope(child: const MyApp()));
 }

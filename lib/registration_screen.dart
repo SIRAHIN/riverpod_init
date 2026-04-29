@@ -17,6 +17,17 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
   @override
   void initState() {
     super.initState();
+    _fetchStoredCredentials();
+  }
+
+  // fetch stored credentials on widget initialization to pre-fill the text fields if credentials are available.
+  Future<void> _fetchStoredCredentials() async {
+    final credentials =
+        await ref.read(authRepositoryProvider).authLocalService.getUserCredential();
+    if (credentials != null) {
+      emailController.text = credentials.email;
+      passwordController.text = credentials.password;
+    }
   }
 
   @override

@@ -1,4 +1,3 @@
-// dart format width=80
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 // **************************************************************************
@@ -14,6 +13,8 @@ import 'package:injectable/injectable.dart' as _i526;
 
 import 'api_service/auth_api_service.dart' as _i456;
 import 'api_service/i_auth_api_service.dart' as _i1016;
+import 'local_service/auth_local_service.dart' as _i141;
+import 'provider/auth_state_notifer.dart' as _i243;
 import 'repository/auth_respository.dart' as _i241;
 
 // initializes the registration of main-scope dependencies inside of GetIt
@@ -27,8 +28,11 @@ _i174.GetIt $initGetIt(
     environment,
     environmentFilter,
   );
+  gh.factory<_i243.AuthStateNotifer>(() => _i243.AuthStateNotifer());
   gh.lazySingleton<_i1016.AuthApiService>(() => _i456.IAuthApiService());
-  gh.lazySingleton<_i241.AuthRepository>(
-      () => _i241.IAuthRepository(gh<_i1016.AuthApiService>()));
+  gh.lazySingleton<_i241.AuthRepository>(() => _i241.IAuthRepository(
+        gh<_i1016.AuthApiService>(),
+        gh<_i141.AuthLocalService>(),
+      ));
   return getIt;
 }
