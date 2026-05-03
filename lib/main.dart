@@ -9,12 +9,26 @@ import 'package:riverpod_practice/firebase_options.dart';
 import 'package:riverpod_practice/injection.dart';
 import 'package:riverpod_practice/models/auth_credential.dart';
 import 'package:riverpod_practice/registration_screen.dart';
+import 'package:riverpod_practice/services/fcm_service.dart';
+import 'package:riverpod_practice/services/local_notification_service.dart';
 
 void main() async {
+  // Step 1: Ensure Flutter bindings are initialized before any async calls.
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Step 2: Initialize Firebase (required before any Firebase service).
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Step 3: Initialize Local Notification Service.
+  // Must be initialized BEFORE FCM service so it can show notifications.
+  await LocalNotificationService().init();
+  await LocalNotificationService().requestPermission();
+
+  // Step 4: Initialize FCM Service.
+  // This sets up foreground, background, and terminated message handlers.
+  await FcmService().init();
 
   configureDependencies();
 
