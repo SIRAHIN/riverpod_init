@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:riverpod_practice/routes/app_router.dart';
+import 'package:riverpod_practice/screens/main_nav_providers/main_nav_provider.dart';
 
 import 'local_notification_service.dart';
 
@@ -288,5 +290,16 @@ class FcmService {
     //   final screen = data['screen'];
     //   // Use your router (GoRouter, Navigator, etc.) to navigate
     // }
+
+    if (data.containsKey('screen')) {
+      final screen = data['screen'];
+      if (screen == 'home') {
+        appRouter.go('/home');
+      } else if (screen == 'profile') {
+        appRouter.go('/profile');
+      } else if (screen == 'search') {
+        appRouter.go('/search');
+      }
+    }
   }
 }

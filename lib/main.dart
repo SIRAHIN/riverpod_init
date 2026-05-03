@@ -8,7 +8,7 @@ import 'package:riverpod_practice/firebase_analytics_service.dart';
 import 'package:riverpod_practice/firebase_options.dart';
 import 'package:riverpod_practice/injection.dart';
 import 'package:riverpod_practice/models/auth_credential.dart';
-import 'package:riverpod_practice/registration_screen.dart';
+import 'package:riverpod_practice/routes/app_router.dart';
 import 'package:riverpod_practice/services/fcm_service.dart';
 import 'package:riverpod_practice/services/local_notification_service.dart';
 
@@ -44,9 +44,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RegistrationScreen(),
-      navigatorObservers: [FirebaseAnalyticsService().getAnalyticsObserver()],
+    // Changed from MaterialApp to MaterialApp.router
+    // to use GoRouter for navigation instead of Navigator.
+    //
+    // MaterialApp.router uses a declarative routing approach
+    // where routes are defined in appRouter (GoRouter instance)
+    // rather than using imperative push/pop navigation.
+    return MaterialApp.router(
+      routerConfig: appRouter,
     );
   }
 }
