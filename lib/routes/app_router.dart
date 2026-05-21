@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:riverpod_practice/registration_screen.dart';
 import 'package:riverpod_practice/screens/main_nav_shell.dart';
 import 'package:riverpod_practice/screens/home_screen.dart';
 import 'package:riverpod_practice/screens/profile_screen.dart';
@@ -86,7 +87,7 @@ GoRouter appRouter = GoRouter(
           routes: [
             GoRoute(
               path: '/home',
-              builder: (context, state) => const HomeScreen(),
+              builder: (context, state) => const RegistrationScreen(),
               // You can add sub-routes here, e.g.:
               // GoRoute(path: 'details', builder: ...)
             ),

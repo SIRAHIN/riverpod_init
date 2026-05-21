@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:riverpod_practice/api_service/auth_api_service.dart';
 import 'package:riverpod_practice/api_service/i_auth_api_service.dart';
 import 'package:riverpod_practice/local_service/auth_local_service.dart';
+import 'package:riverpod_practice/provider/auth_state.dart';
 import 'package:riverpod_practice/repository/auth_respository.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
@@ -22,7 +23,7 @@ final authLocalServiceProvider = Provider<AuthLocalService>((ref) {
 });
 
 @injectable
-class AuthStateNotifer extends AsyncNotifier<void> {
+class AuthStateNotifer extends AsyncNotifier<AuthState> {
   late AuthRepository authRepository;
   AuthStateNotifer() : super();
 
@@ -34,20 +35,39 @@ class AuthStateNotifer extends AsyncNotifier<void> {
         await authRepository.login(userName: userName, password: password);
     result.fold(
         (l) => state =
-            AsyncValue.error(l.message.toString(), StackTrace.current), (r) {
+            AsyncValue.error(state.value!.copyWith(isSuccess: false, errorMessage: l.message), StackTrace.current), (r) {
 
       // Save credentials locally after successful login \\        
       authRepository.saveCredentials(email: userName, password: password);
-      state = AsyncValue.data(r);
+      state = AsyncValue.data(state.value!.copyWith(isSuccess: true));
     });
+  }
+
+  // change slider value
+  void changeSliderValue(double value){
+    if(state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(sliderValue: value));
+  }
+
+  // change selected gender
+  void changeSelectedGender(String gender) {
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(selectedGender: gender));
+  }
+
+  // toggle password visibility
+  void togglePasswordVisibility() {
+    if (state.value == null) return;
+    state = AsyncValue.data(state.value!.copyWith(isPasswordVisible: !state.value!.isPasswordVisible));
   }
 
   // This method is called when the notifier is first created. It's a good place to initialize any dependencies.
   @override
-  void build() {
+  FutureOr<AuthState> build() {
     authRepository = ref.read(authRepositoryProvider);
+    return AuthState();
   }
 }
 
 final authStateProvider =
-    AsyncNotifierProvider<AuthStateNotifer, void>(AuthStateNotifer.new);
+    AsyncNotifierProvider<AuthStateNotifer, AuthState>(AuthStateNotifer.new);

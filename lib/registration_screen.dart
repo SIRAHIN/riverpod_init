@@ -39,7 +39,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
     ref.listen(authStateProvider, (previous, next) {
       final messenger = ScaffoldMessenger.of(context);
       if (next is AsyncError) {
-        messenger.showSnackBar(SnackBar(content: Text("${next.error}")));
+        messenger.showSnackBar(SnackBar(content: Text(next.value?.errorMessage ?? "Login Failed")));
       } else if (next is AsyncData) {
         messenger
             .showSnackBar(const SnackBar(content: Text("Login Successful")));
@@ -54,8 +54,46 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
           children: [
             TextField(controller: emailController),
             const SizedBox(height: 16),
-            TextField(controller: passwordController),
+            TextField(controller: passwordController,
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                icon: Icon(authState.value?.isPasswordVisible == true
+                    ? Icons.visibility
+                    : Icons.visibility_off),
+                onPressed: () {
+                  ref
+                      .read(authStateProvider.notifier)
+                      .togglePasswordVisibility();
+                },
+              ),
+            ),
+            ),
             const SizedBox(height: 24),
+            // Gender Dropdown
+            DropdownButton<String>(
+              value: authState.value?.selectedGender,
+              items: <String>['Male', 'Female', 'Other']
+                  .map((gender) => DropdownMenuItem(
+                        value: gender,
+                        child: Text(gender),
+                      ))
+                  .toList(),
+              onChanged: (value) {
+                ref.read(authStateProvider.notifier).changeSelectedGender(value!);
+              },
+            ),
+
+            // Age Slider
+            Slider(
+              onChanged: (value) {
+                ref.read(authStateProvider.notifier).changeSliderValue(value);
+              },
+              value: authState.value?.sliderValue ?? 0,
+              min: 0,
+              max: 100,
+              divisions: 100,
+              label: "${authState.value?.sliderValue.toInt() ?? 0}",
+            ),
             SizedBox(
               width: double.infinity,
               height: 50,
